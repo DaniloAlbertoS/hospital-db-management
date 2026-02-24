@@ -1,1 +1,102 @@
+/* Incluindo coluna "Em_Atividade" na tabela medicos */
+ALTER TABLE medicos
+    ADD COLUMN Em_Atividade BOOL;
 
+/* Alterando a coluna Em_Atividade para 0 (Não) para médicos específicos */
+UPDATE medicos
+SET Em_Atividade = 0 
+WHERE idmedicos = 1 OR idmedicos = 3;
+
+/* Alterando a coluna Em_Atividade para 1 (Sim) para os demais médicos */
+UPDATE medicos
+SET Em_Atividade = 1
+WHERE idmedicos <> 1 AND idmedicos <> 3;
+
+/* Alterando data da alta para três dias após a entrada em internações específicas */
+UPDATE internacao
+SET data_alta = '2018-08-25' 
+WHERE idinternacao = 1;
+
+UPDATE internacao
+SET data_alta = '2021-04-05' 
+WHERE idinternacao = 4;
+
+/* Removendo associação de convênio em consultas específicas */
+UPDATE consultas
+SET convenios_idconvenios = NULL 
+WHERE idconsultas = 6;
+
+UPDATE consultas
+SET convenios_idconvenios = NULL 
+WHERE idconsultas = 9;
+
+/* Removendo associação de convênio em pacientes específicos */
+UPDATE pacientes
+SET convenios_idconvenios = NULL 
+WHERE idpacientes = 3 OR idpacientes = 6 OR idpacientes = 9;
+
+/* Deletando o último convênio cadastrado */
+DELETE FROM convenios 
+WHERE idconvenios = 4 
+LIMIT 1;
+
+/* Incluindo consultas realizadas em 2020 sem convenio */
+INSERT INTO consultas (data, hora, valor, medicos_idmedicos, pacientes_idpacientes)
+VALUES
+    ('2020-08-09', '14:20:00', '40.00', '4', '2'),
+    ('2020-05-17', '15:50:20', '50.20', '1', '4');
+
+/* Incluindo consultas realizadas em 2020 com convenio */
+INSERT INTO consultas (data, hora, valor, medicos_idmedicos, pacientes_idpacientes, convenios_idconvenios)
+VALUES
+    ('2020-08-05', '12:20:00', 35.00, '5', '3', '2'),
+    ('2020-01-15', '12:50:00', 35.00, '3', '8', '2');
+
+/* Incluindo especialidades a medicos */
+INSERT INTO medicos_has_especialidades (medicos_idmedicos, especialidades_idespecialidades)
+VALUES
+    ('1', '2'), ('2', '3'), ('3', '1'), ('4', '6'), ('5', '7'),
+    ('6', '4'), ('7', '5'), ('8', '3'), ('9', '1'), ('10', '2');
+
+/* Modificando data_nascimento pacientes */
+UPDATE pacientes SET data_nascimento = '2018-02-20' WHERE idpacientes = 1;
+UPDATE pacientes SET data_nascimento = '2020-05-10' WHERE idpacientes = 5;
+UPDATE pacientes SET data_nascimento = '2022-05-15' WHERE idpacientes = 7;
+
+/* Atualizando especialidades na tabela consultas */
+UPDATE consultas SET especialidades_idespecialidades = 2 WHERE medicos_idmedicos = 1;
+UPDATE consultas SET especialidades_idespecialidades = 3 WHERE medicos_idmedicos = 2;
+UPDATE consultas SET especialidades_idespecialidades = 1 WHERE medicos_idmedicos = 3;
+UPDATE consultas SET especialidades_idespecialidades = 6 WHERE medicos_idmedicos = 4;
+UPDATE consultas SET especialidades_idespecialidades = 7 WHERE medicos_idmedicos = 5;
+UPDATE consultas SET especialidades_idespecialidades = 4 WHERE medicos_idmedicos = 6;
+UPDATE consultas SET especialidades_idespecialidades = 5 WHERE medicos_idmedicos = 7;
+UPDATE consultas SET especialidades_idespecialidades = 3 WHERE medicos_idmedicos = 8;
+UPDATE consultas SET especialidades_idespecialidades = 1 WHERE medicos_idmedicos = 9;
+UPDATE consultas SET especialidades_idespecialidades = 2 WHERE medicos_idmedicos = 10;
+
+/* Incluindo mais quartos */
+INSERT INTO quarto (numero, tipo_quarto_idtipo_quarto)
+VALUES
+    ('2', '3'), ('3', '2'), ('4', '3'), ('6', '1'), ('7', '3');
+
+/* Incluindo mais internacoes */
+INSERT INTO internacao (data_entrada, data_prev_alta, data_alta, procedimentos, quarto_idquarto, pacientes_idpacientes, medicos_idmedicos)
+VALUES
+    ('2019-05-22', '2018-05-30', '2018-05-25', 'jejum', '4', '3', '5'),
+    ('2020-08-12', '2020-09-20', '2020-09-30', 'Administração de Medicação Intravenosa', '5', '1', '1'),
+    ('2019-09-30', '2019-10-10', '2020-10-12', 'Monitoramento Cardíaco Contínuo', '6', '8', '3'),
+    ('2021-04-15', '2021-06-10', '2021-06-11', 'Curativos e Tratamento de Feridas', '7', '5', '4'),
+    ('2021-12-30', '2022-01-02', '2022-01-12', 'Administração de Oxigênio por Cateter Nasal', '8', '10', '8');
+
+/* Atualizando e incluindo o tipo de quarto a quarto */
+UPDATE quarto SET tipo_quarto_idtipo_quarto = 1 WHERE idquarto = 2;
+UPDATE quarto SET tipo_quarto_idtipo_quarto = 2 WHERE idquarto = 1;
+UPDATE quarto SET tipo_quarto_idtipo_quarto = 3 WHERE idquarto = 3;
+
+/* Mudando o tipo de quarto para enfermaria e ajustando médicos */
+UPDATE internacao SET medicos_idmedicos = 9 WHERE idinternacao = 2;
+UPDATE internacao SET quarto_idquarto = 1 WHERE idinternacao = 7;
+UPDATE internacao SET quarto_idquarto = 1 WHERE idinternacao = 5;
+
+/* ---------------------- FIM SCRIPT ---------------------- */
