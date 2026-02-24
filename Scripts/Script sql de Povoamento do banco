@@ -1,0 +1,122 @@
+/*---- Comandos de manipulação de banco comandos DML----*/
+
+
+/* Inserindo medicos na tabela */
+INSERT INTO medicos (nome, crm) 
+VALUES
+    ('Ester Adriana Araújo', 11111),
+    ('Heloisa Isis Baptista', 12121),
+    ('Sophia Tatiane Drumond', 11121),
+    ('Tânia Kamilly Tatiane Novaes', 11131),
+    ('Elza Elza Moreira', 11141),
+    ('Theo Manuel Cavalcanti', 11151),
+    ('Bruno Iago Fernandes', 11161),
+    ('Sophia Márcia Ferreira', 11171),
+    ('Simone Esther Souza', 11181),
+    ('Caio Martin Anderson Castro', 11191);
+
+/* Inserindo pacientes na tabela */
+INSERT INTO pacientes (idpacientes, nome, data_nascimento, endereco, telefone, email, cpf, rg, convenios_idconvenios) 
+VALUES
+    ('1', 'Martin Diego Dias', '2001-04-02', 'Rua Diogo de Ordonhes', '998171820', 'martin-dias91@mpc.com.br', 43267259827, '125295017', '3'),
+    ('2', 'Pietra Sabrina Viana', '1944-07-01', 'Alameda do Pilões', '997165165', 'pietrasabrinaviana@rjnet.com.br', 26315642861, 181559808, '2'),
+    ('3', 'Lorenzo Osvaldo Galvão', '2005-05-03', 'Rua Irmã Leonor de São José', '993443377', 'lorenzoosvaldogalvao@hotmmail.com', 31247087840, 278047257, '4'),
+    ('4', 'Henry Kauê da Mota', '1982-07-11', 'Viela Um', '984284524', 'henry_damota@araraquara.com.br', 67205978840, 206936953, '2'),
+    ('5', 'Henry Matheus Cavalcanti', '1990-08-01', 'Rua Mário Magri', '989398643', 'henry-cavalcanti72@golinelli.eti.br', 62905267828, 228224536, '1'),
+    ('6', 'Manoel Victor Rocha', '1950-08-02', 'Rua Joaquim de Almeida', '985080707', 'manoel.victor.rocha@daou.com.br', 39653280856, 407948132, '4'),
+    ('7', 'Geraldo Theo Alexandre dos Santos', '1994-07-04', 'Praça dos Ipês', '984914635', 'geraldo_theo_dossantos@compecia.com.br', 84575615889, 411748269, '2'),
+    ('8', 'Henrique Augusto Thiago Moura', '1956-07-27', 'Rua Benedito Lino de Campos', '984159094', 'henriqueaugustomoura@mucoucah.com.br', 00149283881, 482666742, '3'),
+    ('9', 'Guilherme Miguel Freitas', '2004-01-07', 'Avenida Poema', '989988115', 'guilherme_freitas@fictor.com.br', 45481499886, 384227892, '4'),
+    ('10', 'Regina Elisa Alves', '2004-03-09', 'Rua Antenor Leite da Cunha', '994479497', 'regina-alves97@novotempo.com', 86903398848, 185275412, '1');
+
+/* Inserindo consultas */
+INSERT INTO consultas (data, hora, valor, medicos_idmedicos, pacientes_idpacientes, convenios_idconvenios)
+VALUES
+    ('2018-08-07', '12:30:00', '45.50', '1', '2', '2'),
+    ('2019-05-02', '07:10:00', '40.00', '2', '1', '3'),
+    ('2020-02-02', '10:10:00', '40.00', '3', '4', '2'),
+    ('2021-04-20', '14:00:00', '35.00', '4', '5', '1'),
+    ('2019-06-22', '09:30:00', '40.00', '6', '1', '3'),
+    ('2022-02-10', '15:30:00', '45.00', '5', '6', '4'),
+    ('2022-12-01', '06:30:00', '50.00', '10', '8', '3'),
+    ('2021-08-28', '18:40:00', '55.00', '7', '2', '2'),
+    ('2020-04-16', '15:20:00', '35.00', '9', '9', '4'),
+    ('2022-02-22', '11:30:00', '30.00', '8', '10', '1');
+
+/* Inserindo receitas a consultas */
+INSERT INTO receitas (medicamento, dosagem, consultas_idconsultas)
+VALUES
+    ('clonazepan', '2,5 mg com 20 comprimidos. tomar 1 comprimdo a cada 8 horas.', '2'),
+    ('bromazepam', '3 mg com 30 comprimidos. tomar 1 comprimido a noite.', '2'),
+    ('clavulin', '875 mg com 10 comprimidos. tomar 1 comprimdo a cada 12 horas por 5 dias.', '5'),
+    ('ibuprofeno', '600 mg com 30 comprimidos. tomar 1 comprimdo a cada 8 horas por 10 dias.', '5'),
+    ('aerolin spray', '100 mcrg  com 200 doses. 3 puffs a cada 8 se nescecidade.', '7'),
+    ('clenil spray', '250 mcrg com 200 doses. 1 puff ao dia.', '7'),
+    ('omeprazol', '20 mg com 28 comprimidos. tomar 1 comprimdo em jejum .', '1'),
+    ('hidroxido de aluminio', '200 ml. tomar uma colher  de sopa a cada refeição.', '1'),
+    ('Glifaxe xr', '500 mg com 30 comprimidos. tomar 1 comprimdo a cada 8 horas.', '10'),
+    ('losartana', '50 mg com 30 comprimidos. tomar 1 comprimdo a cada 8 horas.', '10'),
+    ('insulina nph', 'utilizar 5unidades de manha, 10 a tarde, 8 a noite.', '10');
+
+/* Inserindo quartos */
+INSERT INTO quarto (numero)
+VALUES (1), (5), (8);
+
+/* Inserindo internações */
+INSERT INTO internacao (data_entrada, data_prev_alta, data_alta, procedimentos, quarto_idquarto, pacientes_idpacientes, medicos_idmedicos)
+VALUES
+    ('2018-08-22', '2018-09-01', '2018-09-01', 'jejum', '1', '2', '1'),
+    ('2020-07-12', '2020-10-20', '2020-11-10', 'Administração de Medicação Intravenosa', '2', '5', '5'),
+    ('2019-07-02', '2019-08-15', '2020-01-05', 'Monitoramento Cardíaco Contínuo', '3', '8', '6'),
+    ('2021-04-02', '2021-06-12', '2021-06-30', 'Curativos e Tratamento de Feridas', '1', '10', '4'),
+    ('2021-12-20', '2022-01-02', '2022-01-10', 'Administração de Oxigênio por Cateter Nasal', '3', '5', '8'),
+    ('2021-08-22', '2021-10-01', '2021-10-30', 'Mudança de Posição e Mobilização', '2', '10', '9'),
+    ('2022-02-05', '2022-06-25', '2022-07-15', 'Administração de Nutrição Enteral', '3', '3', '2');
+
+/* Inserindo enfermeiro */
+INSERT INTO enfermeiro (nome, cpf, cre)
+VALUES
+    ('Manuela Ayla Fogaça', '59392816804', '5555'),
+    ('Lúcia Alice da Silva', '32473781117', '1555'),
+    ('Kevin Nicolas Davi Cavalcanti', '77992699289', '4587'),
+    ('Laís Aline Stella Carvalho', '72674738812', '1456'),
+    ('Tânia Isabella Elisa da Cunha', '34935938307', '5287'),
+    ('Sophie Clara Aparício', '43259749381', '2366');
+
+/* Associando enfermeiros a internações */
+INSERT INTO internacao_has_enfermeiro (internacao_idinternacao, enfermeiro_idenfermeiro)
+VALUES
+    ('1', '2'), ('1', '1'),
+    ('2', '5'), ('2', '6'),
+    ('3', '6'), ('3', '4'),
+    ('4', '3'), ('4', '4'),
+    ('5', '2'), ('5', '1'),
+    ('6', '3'), ('6', '5'),
+    ('7', '2'), ('7', '6');
+
+/* Inserindo tipo_quarto */
+INSERT INTO tipo_quarto (idtipo_quarto, valor_diaria, descricao)
+VALUES
+    (1, '50.00', 'Enfermaria'),
+    (2, '100.00', 'Quartos duplos'),
+    (3, '250.00', 'Apartamentos');
+
+/* Inserindo convenios */
+INSERT INTO convenios (idconvenios, nome, cnpj, tempo_carencia, numero_carteira)
+VALUES
+    (1, 'Notredame', '76679098000117', '30 dias', ''),
+    (2, 'Amil', '15693338000143', '60 dias', ''),
+    (3, 'Central Nacional Unimed', '27408581000151', '50 dias', ''),
+    (4, 'Bradesco Sáude', '16278267000185', 'não há', '');
+
+/* Inserindo especialidades */
+INSERT INTO especialidades (descricao)
+VALUES
+    ('pediatria'),
+    ('clínica geral'),
+    ('gastroenterologia'),
+    ('dermatologia'),
+    ('Neurologia'),
+    ('Psiquiatria'),
+    ('Oftalmologia');
+/*---------- Fim do Script ----------*/
