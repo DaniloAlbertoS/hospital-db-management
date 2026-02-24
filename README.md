@@ -7,7 +7,7 @@ Este projeto consiste na modelagem e implementação de um banco de dados relaci
 ---
 
 ## 🛠️ Tecnologias e Ferramentas
-* **Banco de Dados:** MySQL / MariaDB
+* **Banco de Dados:** MySQL 
 * **Linguagem:** SQL (DDL, DML, DQL)
 * **Modelagem:** Diagrama de Entidade-Relacionamento (DER)
 
