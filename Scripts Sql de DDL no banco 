@@ -1,0 +1,152 @@
+/*---- Comandos de criação de banco comandos DDL----*/
+
+/* Criando banco de dados */
+CREATE DATABASE IF NOT EXISTS hospital_db_Danilo_Alberto;
+
+USE hospital_db_Danilo_Alberto;
+
+/* Criando tabela pacientes */
+CREATE TABLE pacientes (
+    idpacientes INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(45) NOT NULL,
+    data_nascimento DATE NOT NULL,
+    endereco VARCHAR(45) NOT NULL,
+    telefone INT(10) NOT NULL,
+    email VARCHAR(45) NOT NULL,
+    cpf INT(11) NOT NULL,
+    rg INT(10) NOT NULL
+);
+
+ALTER TABLE pacientes
+    MODIFY COLUMN data_nascimento DATE,
+    MODIFY COLUMN endereco VARCHAR(45),
+    MODIFY COLUMN telefone INT,
+    MODIFY COLUMN email VARCHAR(45),
+    MODIFY COLUMN cpf VARCHAR(45),
+    MODIFY COLUMN rg VARCHAR(45);
+
+/* Criando tabela convenios */
+CREATE TABLE IF NOT EXISTS convenios (
+    idconvenios INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(45) NOT NULL,
+    cnpj INT(14) NOT NULL,
+    tempo_carencia VARCHAR(45) NOT NULL,
+    numero_carteira INT NOT NULL
+);
+
+ALTER TABLE convenios
+    MODIFY COLUMN cnpj VARCHAR(45) NOT NULL,
+    MODIFY COLUMN numero_carteira VARCHAR(45) NOT NULL;
+
+/* Adicionando chave estrangeira a pacientes */
+ALTER TABLE pacientes
+    ADD COLUMN convenios_idconvenios INT,
+    ADD FOREIGN KEY (convenios_idconvenios) REFERENCES convenios(idconvenios);
+
+/* Criando tabela medicos */
+CREATE TABLE IF NOT EXISTS medicos (
+    idmedicos INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(45) NOT NULL,
+    crm INT NOT NULL
+);
+
+/* Criando tabela especialidades */
+CREATE TABLE IF NOT EXISTS especialidades (
+    idespecialidades INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    descricao VARCHAR(45) NOT NULL
+);
+
+/* Criando tabela medicos_especialidades para ligação n-n */
+CREATE TABLE IF NOT EXISTS medicos_has_especialidades (
+    medicos_idmedicos INT,
+    especialidades_idespecialidades INT,
+    FOREIGN KEY (medicos_idmedicos) REFERENCES medicos(idmedicos)
+);
+
+/* Adicionando chave estrangeira a medicos_especialidades */
+ALTER TABLE medicos_has_especialidades
+    ADD FOREIGN KEY (especialidades_idespecialidades) REFERENCES especialidades(idespecialidades);
+
+/* Criando tabela consultas */
+CREATE TABLE IF NOT EXISTS consultas (
+    idconsultas INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    data DATE NOT NULL,
+    hora TIME NOT NULL,
+    valor DECIMAL(3,2) NOT NULL,
+    medicos_idmedicos INT,
+    FOREIGN KEY (medicos_idmedicos) REFERENCES medicos(idmedicos),
+    pacientes_idpacientes INT,
+    FOREIGN KEY (pacientes_idpacientes) REFERENCES pacientes(idpacientes),
+    convenios_idconvenios INT,
+    FOREIGN KEY (convenios_idconvenios) REFERENCES convenios(idconvenios),
+    especialidades_idespecialidades INT,
+    FOREIGN KEY (especialidades_idespecialidades) REFERENCES especialidades(idespecialidades)
+);
+
+ALTER TABLE consultas
+    MODIFY COLUMN valor DECIMAL(4,2) NOT NULL;
+
+/* Criando tabela receitas */
+CREATE TABLE IF NOT EXISTS receitas (
+    idreceitas INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    medicamento TEXT,
+    dosagem TEXT,
+    consultas_idconsultas INT,
+    FOREIGN KEY (consultas_idconsultas) REFERENCES consultas(idconsultas)
+);
+
+/* Criando tabela quarto */
+CREATE TABLE IF NOT EXISTS quarto (
+    idquarto INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    numero INT NOT NULL 
+);
+
+/* Criando tabela tipo_quarto */
+CREATE TABLE IF NOT EXISTS tipo_quarto (
+    idtipo_quarto INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    valor_diaria DECIMAL(3,2),
+    descricao VARCHAR(45) NOT NULL
+);
+
+ALTER TABLE tipo_quarto
+    MODIFY COLUMN valor_diaria DECIMAL(5,2);
+
+/* Adicionando chave estrangeira */
+ALTER TABLE quarto
+    ADD COLUMN tipo_quarto_idtipo_quarto INT,
+    ADD FOREIGN KEY (tipo_quarto_idtipo_quarto) REFERENCES tipo_quarto(idtipo_quarto);
+
+/* Criando tabela internacao */
+CREATE TABLE IF NOT EXISTS internacao (
+    idinternacao INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    data_entrada DATE NOT NULL,
+    data_prev_alta DATE NOT NULL,
+    data_alta DATE NOT NULL,
+    procedimentos TEXT NOT NULL,
+    quarto_idquarto INT NOT NULL,
+    pacientes_idpacientes INT NOT NULL,
+    medicos_idmedicos INT NOT NULL,
+    FOREIGN KEY (quarto_idquarto) REFERENCES quarto(idquarto),
+    FOREIGN KEY (pacientes_idpacientes) REFERENCES pacientes(idpacientes),
+    FOREIGN KEY (medicos_idmedicos) REFERENCES medicos(idmedicos)
+);
+
+/* Criando tabela enfermeiro */
+CREATE TABLE IF NOT EXISTS enfermeiro (
+    idenfermeiro INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(45) NOT NULL,
+    cpf VARCHAR(11) NOT NULL,
+    cre VARCHAR(10)
+);
+
+ALTER TABLE enfermeiro
+    MODIFY COLUMN cpf VARCHAR(45) NOT NULL;
+
+/* Criando tabela internacao_has_enfermeiro e adicionando chaves estrangeiras n-n */
+CREATE TABLE IF NOT EXISTS internacao_has_enfermeiro (
+    internacao_idinternacao INT NOT NULL,
+    enfermeiro_idenfermeiro INT NOT NULL,
+    FOREIGN KEY (internacao_idinternacao) REFERENCES internacao(idinternacao),
+    FOREIGN KEY (enfermeiro_idenfermeiro) REFERENCES enfermeiro(idenfermeiro)
+);
+/* ---------------------- FIM SCRIPT ---------------------- */
