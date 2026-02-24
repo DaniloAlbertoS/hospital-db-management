@@ -6,6 +6,10 @@ Este projeto consiste na modelagem e implementação de um banco de dados relaci
 
 ---
 
+![Diagrama de Entidade Relacionamento](./diagrama_hospital.png)
+
+---
+
 ## 🛠️ Tecnologias e Ferramentas
 * **Banco de Dados:** MySQL 
 * **Linguagem:** SQL (DDL, DML, DQL)
