@@ -1,0 +1,118 @@
+/*---- Comandos de query  de banco comandos DQL----*/
+
+USE hospital_db_danilo_alberto;
+
+/* Todos os dados e o valor médio das consultas do ano de 2020 realizadas SEM convênio */
+SELECT * FROM consultas 
+WHERE YEAR(data) = 2020 AND convenios_idconvenios IS NULL;
+
+SELECT AVG(valor) AS valor_medio FROM consultas 
+WHERE YEAR(data) = 2020 AND convenios_idconvenios IS NULL;
+
+/* Todos os dados e o valor médio das consultas do ano de 2020 realizadas POR convênio */
+SELECT * FROM consultas 
+WHERE YEAR(data) = 2020 AND convenios_idconvenios IS NOT NULL;
+
+SELECT AVG(valor) AS valor_medio FROM consultas 
+WHERE YEAR(data) = 2020 AND convenios_idconvenios IS NOT NULL;
+
+/* Todos os dados das internações que tiveram data de alta maior que a data prevista */
+SELECT * FROM internacao 
+WHERE data_alta > data_prev_alta;
+
+/* Receituário completo da primeira consulta registrada com receituário associado */
+SELECT * FROM receitas 
+WHERE consultas_idconsultas = 1;
+
+/* Consulta de maior e menor valor (sem convênio) usando Subqueries */
+SELECT * FROM consultas 
+WHERE convenios_idconvenios IS NULL 
+AND (
+    valor = (SELECT MAX(valor) FROM consultas WHERE convenios_idconvenios IS NULL)  
+    OR 
+    valor = (SELECT MIN(valor) FROM consultas WHERE convenios_idconvenios IS NULL)
+)
+ORDER BY valor DESC;
+
+/* Cálculo do total da internação (diária * dias) */
+SELECT 
+    i.*, 
+    t.idtipo_quarto, 
+    t.valor_diaria,
+    (DATEDIFF(i.data_alta, i.data_entrada) * t.valor_diaria) AS total_internacao, 
+    DATEDIFF(i.data_alta, i.data_entrada) AS diferenca_dias 
+FROM internacao i 
+JOIN tipo_quarto t ON i.quarto_idquarto = t.idtipo_quarto;
+
+/* Internações em quartos do tipo “apartamento” */
+SELECT i.data_entrada, i.procedimentos, q.numero  
+FROM internacao i 
+JOIN quarto q ON i.quarto_idquarto = q.idquarto  
+JOIN tipo_quarto ti ON ti.idtipo_quarto = q.tipo_quarto_idtipo_quarto 
+WHERE ti.descricao = 'Apartamentos';
+
+/* Pacientes menores de 18 anos em especialidades exceto pediatria */
+SELECT 
+    p.nome AS nome_paciente, 
+    c.data AS data_consulta, 
+    es.descricao AS nome_especialidades 
+FROM pacientes p 
+JOIN consultas c ON p.idpacientes = c.pacientes_idpacientes
+JOIN especialidades es ON es.idespecialidades = c.especialidades_idespecialidades 
+WHERE es.descricao != 'pediatria' 
+AND TIMESTAMPDIFF(YEAR, p.data_nascimento, c.data) < 18 
+ORDER BY c.data;
+
+/* Internações por "gastroenterologia" em "enfermaria" */
+SELECT 
+    p.nome AS nome_paciente, 
+    m.nome AS nome_medico, 
+    i.data_entrada AS data_internacao, 
+    i.procedimentos AS procedimentos, 
+    es.descricao AS especialidade,
+    ti.descricao AS tipo_quarto 
+FROM pacientes AS p 
+JOIN internacao AS i ON i.pacientes_idpacientes = p.idpacientes 
+JOIN medicos AS m ON i.medicos_idmedicos = m.idmedicos 
+JOIN medicos_has_especialidades AS esm ON esm.medicos_idmedicos = m.idmedicos 
+JOIN especialidades AS es ON esm.especialidades_idespecialidades = es.idespecialidades 
+JOIN quarto AS q ON i.quarto_idquarto = q.idquarto
+JOIN tipo_quarto AS ti ON q.tipo_quarto_idtipo_quarto = ti.idtipo_quarto 
+WHERE es.idespecialidades = 3;
+
+/* Quantidade de consultas por médico */
+SELECT 
+    m.nome AS nome_medico, 
+    m.crm, 
+    COUNT(c.idconsultas) AS total_consultas 
+FROM medicos AS m 
+JOIN consultas AS c ON m.idmedicos = c.medicos_idmedicos 
+GROUP BY m.idmedicos 
+ORDER BY m.nome;
+
+/* Enfermeiros com mais de uma internação (Uso de HAVING) */
+SELECT 
+    e.nome AS nome_enfermeiro, 
+    e.cre AS numero_registro,
+    COUNT(ie.internacao_idinternacao) AS numero_internacao 
+FROM enfermeiro AS e 
+LEFT JOIN internacao_has_enfermeiro AS ie ON e.idenfermeiro = ie.enfermeiro_idenfermeiro 
+GROUP BY e.idenfermeiro 
+HAVING COUNT(ie.internacao_idinternacao) > 1 
+ORDER BY e.nome;
+
+/* --- Consultas autorais: Filtro de especialidades específicas --- */
+SELECT 
+    p.nome AS nome_paciente, 
+    m.nome AS nome_medico, 
+    c.data AS data_consulta, 
+    es.descricao 
+FROM pacientes AS p 
+JOIN consultas AS c ON c.pacientes_idpacientes = p.idpacientes
+JOIN medicos AS m ON c.medicos_idmedicos = m.idmedicos 
+JOIN medicos_has_especialidades AS mes ON mes.medicos_idmedicos = m.idmedicos 
+JOIN especialidades AS es ON mes.especialidades_idespecialidades = es.idespecialidades 
+WHERE es.descricao <> 'dermatologia' AND es.descricao <> 'pediatria' 
+ORDER BY p.nome;
+
+/* ---------------------- FIM SCRIPT ---------------------- */
