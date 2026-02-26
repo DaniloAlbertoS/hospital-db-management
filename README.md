@@ -6,7 +6,7 @@ Este projeto consiste na modelagem e implementação de um banco de dados relaci
 
 ---
 
-![Diagrama de Entidade Relacionamento](./DiagramaDER/diagrama_hospital_db_danilo_alberto.jpg)
+![Diagrama de Entidade Relacionamento](./Diagrama_DER/diagrama_hospital_db_danilo_alberto.jpg)
 
 ---
 
